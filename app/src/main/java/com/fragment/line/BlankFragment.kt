@@ -14,9 +14,7 @@ class BlankFragment : Fragment() {
 
     private val hashCode = Integer.toHexString(this.hashCode())
 
-    private val logTag = "Test/BlankFragment@$hashCode"
-
-    private var isResume = false
+    private val logTag = "LOG/BlankFragment@$hashCode"
 
     companion object {
         @JvmStatic
@@ -25,12 +23,12 @@ class BlankFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Log.d(logTag, "onAttach, hidden: $isHidden")
+        Log.d(logTag, "onAttach")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(logTag, "onCreate, hidden: $isHidden")
+        Log.d(logTag, "onCreate")
     }
 
     override fun onCreateView(
@@ -47,6 +45,11 @@ class BlankFragment : Fragment() {
         Log.d(logTag, "onViewCreated")
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        Log.d(logTag, "onActivityCreated")
+    }
+
     override fun onStart() {
         super.onStart()
         Log.d(logTag, "onStart")
@@ -54,14 +57,12 @@ class BlankFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        Log.d(logTag, "onResume, hidden: $isHidden")
-        isResume = true
+        Log.d(logTag, "onResume")
     }
 
     override fun onPause() {
         super.onPause()
-        Log.d(logTag, "onPause, hidden: $isHidden")
-        isResume = false
+        Log.d(logTag, "onPause")
     }
 
     override fun onStop() {
@@ -86,46 +87,25 @@ class BlankFragment : Fragment() {
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
-//        Log.d(logTag, "onHiddenChanged, hidden: $hidden, isResume: $isResume")
+        Log.d(logTag, "onHiddenChanged, hidden: $hidden")
     }
 
-//    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
-//        Log.d(logTag, "onCreateAnimation, transit: $transit, enter: $enter, nextAnim: $nextAnim")
-//
-//        val animation = AnimationUtils.loadAnimation(context, nextAnim)
-//        animation.setAnimationListener(object : Animation.AnimationListener {
-//            override fun onAnimationStart(animation: Animation?) {
+//    override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator? {
+//        Log.d(logTag, "onCreateAnimator, enter=$enter")
+//        if (nextAnim == 0) return null
+//        val animator = AnimatorInflater.loadAnimator(context, nextAnim)
+//        animator.addListener(object : Animator.AnimatorListener {
+//            override fun onAnimationStart(animator: Animator) {
 //                Log.d(logTag, "onAnimationStart")
 //            }
 //
-//            override fun onAnimationEnd(animation: Animation?) {
+//            override fun onAnimationEnd(animator: Animator) {
 //                Log.d(logTag, "onAnimationEnd")
 //            }
 //
-//            override fun onAnimationRepeat(animation: Animation?) {
-//                Log.d(logTag, "onAnimationRepeat")
-//            }
+//            override fun onAnimationCancel(animator: Animator) {}
+//            override fun onAnimationRepeat(animator: Animator) {}
 //        })
-//
-//        return animation
+//        return animator
 //    }
-
-    override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator? {
-        Log.d(logTag, "onCreateAnimator, enter=$enter")
-        if (nextAnim == 0) return null
-        val animator = AnimatorInflater.loadAnimator(context, nextAnim)
-        animator.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animator: Animator) {
-                Log.d(logTag, "onAnimationStart")
-            }
-
-            override fun onAnimationEnd(animator: Animator) {
-                Log.d(logTag, "onAnimationEnd")
-            }
-
-            override fun onAnimationCancel(animator: Animator) {}
-            override fun onAnimationRepeat(animator: Animator) {}
-        })
-        return animator
-    }
 }
