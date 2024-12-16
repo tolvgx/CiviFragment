@@ -19,6 +19,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".proxy.HostActivity"
+            android:exported="false" />
+        <activity
             android:name=".TestViewPagerActivity"
             android:exported="false" />
     </application>

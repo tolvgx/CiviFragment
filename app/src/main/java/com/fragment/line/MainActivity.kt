@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
+import com.fragment.line.proxy.HostActivity
 
 class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +47,7 @@ class MainActivity : FragmentActivity() {
         }
 
         findViewById<Button>(R.id.btn_jump).setOnClickListener {
-            startActivity(Intent(this, TestViewPagerActivity::class.java))
+            startActivity(Intent(this, HostActivity::class.java))
         }
     }
 }

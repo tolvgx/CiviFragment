@@ -88,7 +88,7 @@ public abstract class FragmentHostCallback<E> extends FragmentContainer {
     }
 
     @SuppressWarnings("deprecation")
-    FragmentHostCallback(@NonNull FragmentActivity activity) {
+    FragmentHostCallback(@NonNull Activity activity) {
         this(activity, activity /*context*/, new Handler(), 0 /*windowAnimations*/);
     }
 
