@@ -3,17 +3,25 @@ plugins {
     id 'kotlin-android'
 }
 
+apply from: rootProject.file("fragment/gradle-mvn-push.gradle")
+
 android {
     compileSdk 31
 
     defaultConfig {
-//        applicationId "androidx.fragment.app"
         minSdk 16
         targetSdk 31
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildTypes.all {
+            consumerProguardFiles "proguard-rules.pro"
+        }
+
+        defaultConfig {
+            multiDexEnabled true
+        }
+        namespace "androidx.fragment"
     }
 
     buildTypes {

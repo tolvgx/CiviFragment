@@ -1,0 +1,155 @@
+apply plugin: 'maven-publish'
+
+def POM_GROUP_ID = "androidx.fragment"
+def POM_ARTIFACT_ID = "fragment-civi"
+def POM_VERSION = "1.0.0"
+
+afterEvaluate {
+    publishing {
+        repositories {
+            mavenLocal {
+                url uri("file://${System.properties['user.home']}/.m2/repository")
+            }
+            maven {
+                allowInsecureProtocol = true
+                url "http://jfrog.cloud.qiyi.domain/iqiyi-maven-ott/"
+                credentials {
+                    username = "xxx"
+                    password = "xxx"
+                }
+            }
+        }
+        publications {
+            maven(MavenPublication) {
+                artifactId POM_ARTIFACT_ID
+                groupId POM_GROUP_ID
+                version POM_VERSION
+
+                // 依赖 bundleReleaseAar 任务产出的aar
+                artifact bundleReleaseAar
+                // 依赖 sourcesJar 任务产出的源码
+                artifact sourcesJar
+
+                pom {
+                    name = "Civi Fragment"
+                    description = "Based on androidx.fragment:fragment:1.4.1"
+                    url = "http://gitlab.qiyi.domain/ott/CiviFragment"
+                    licenses {
+                        license {
+                            name = "The Apache Software License, Version 2.0"
+                            url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                        }
+                    }
+                    developers {
+                        developer {
+                            name = "The Android Open Source Project"
+                        }
+                    }
+                }
+
+                pom.withXml {
+                    def dependenciesNode = asNode().appendNode("dependencies")
+
+                    // androidx.annotation:annotation:1.1.0
+                    def annotation = dependenciesNode.appendNode('dependency')
+                    annotation.appendNode('groupId', 'androidx.annotation')
+                    annotation.appendNode('artifactId', 'annotation')
+                    annotation.appendNode('version', '1.1.0')
+                    annotation.appendNode('scope', 'compile')
+
+                    // androidx.core:core-ktx:1.2.0
+                    def core = dependenciesNode.appendNode('dependency')
+                    core.appendNode('groupId', 'androidx.core')
+                    core.appendNode('artifactId', 'core-ktx')
+                    core.appendNode('version', '1.2.0')
+                    core.appendNode('scope', 'compile')
+                    core.appendNode('type', 'aar')
+
+                    // androidx.collection:collection:1.1.0
+                    def collection = dependenciesNode.appendNode('dependency')
+                    collection.appendNode('groupId', 'androidx.collection')
+                    collection.appendNode('artifactId', 'collection')
+                    collection.appendNode('version', '1.1.0')
+                    collection.appendNode('scope', 'compile')
+
+                    // androidx.viewpager:viewpager:1.0.0
+                    def viewpager = dependenciesNode.appendNode('dependency')
+                    viewpager.appendNode('groupId', 'androidx.viewpager')
+                    viewpager.appendNode('artifactId', 'viewpager')
+                    viewpager.appendNode('version', '1.0.0')
+                    viewpager.appendNode('scope', 'compile')
+                    viewpager.appendNode('type', 'aar')
+
+                    // androidx.loader:loader:1.0.0
+                    def loader = dependenciesNode.appendNode('dependency')
+                    loader.appendNode('groupId', 'androidx.loader')
+                    loader.appendNode('artifactId', 'loader')
+                    loader.appendNode('version', '1.0.0')
+                    loader.appendNode('scope', 'compile')
+                    loader.appendNode('type', 'aar')
+
+                    // androidx.activity:activity:1.2.4
+                    def activity = dependenciesNode.appendNode('dependency')
+                    activity.appendNode('groupId', 'androidx.activity')
+                    activity.appendNode('artifactId', 'activity')
+                    activity.appendNode('version', '1.2.4')
+                    activity.appendNode('scope', 'compile')
+                    activity.appendNode('type', 'aar')
+
+                    // androidx.lifecycle:lifecycle-livedata-core:2.3.1
+                    def lifecycle_ld = dependenciesNode.appendNode('dependency')
+                    lifecycle_ld.appendNode('groupId', 'androidx.lifecycle')
+                    lifecycle_ld.appendNode('artifactId', 'lifecycle-livedata-core')
+                    lifecycle_ld.appendNode('version', '2.3.1')
+                    lifecycle_ld.appendNode('scope', 'compile')
+                    lifecycle_ld.appendNode('type', 'aar')
+
+                    // androidx.lifecycle:lifecycle-viewmodel:2.3.1
+                    def lifecycle_vm = dependenciesNode.appendNode('dependency')
+                    lifecycle_vm.appendNode('groupId', 'androidx.lifecycle')
+                    lifecycle_vm.appendNode('artifactId', 'lifecycle-viewmodel')
+                    lifecycle_vm.appendNode('version', '2.3.1')
+                    lifecycle_vm.appendNode('scope', 'compile')
+                    lifecycle_vm.appendNode('type', 'aar')
+
+                    // androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.1
+                    def lifecycle_ss = dependenciesNode.appendNode('dependency')
+                    lifecycle_ss.appendNode('groupId', 'androidx.lifecycle')
+                    lifecycle_ss.appendNode('artifactId', 'lifecycle-viewmodel-savedstate')
+                    lifecycle_ss.appendNode('version', '2.3.1')
+                    lifecycle_ss.appendNode('scope', 'compile')
+                    lifecycle_ss.appendNode('type', 'aar')
+
+                    // androidx.savedstate:savedstate:1.1.0
+                    def savedstate = dependenciesNode.appendNode('dependency')
+                    savedstate.appendNode('groupId', 'androidx.savedstate')
+                    savedstate.appendNode('artifactId', 'savedstate')
+                    savedstate.appendNode('version', '1.1.0')
+                    savedstate.appendNode('scope', 'compile')
+                    savedstate.appendNode('type', 'aar')
+
+                    // androidx.annotation:annotation-experimental:1.0.0
+                    def experimental = dependenciesNode.appendNode('dependency')
+                    experimental.appendNode('groupId', 'androidx.annotation')
+                    experimental.appendNode('artifactId', 'annotation-experimental')
+                    experimental.appendNode('version', '1.0.0')
+                    experimental.appendNode('scope', 'compile')
+                    experimental.appendNode('type', 'aar')
+
+                    // org.jetbrains.kotlin:kotlin-stdlib:1.5.31
+                    def kotlin_stdlib = dependenciesNode.appendNode('dependency')
+                    kotlin_stdlib.appendNode('groupId', 'org.jetbrains.kotlin')
+                    kotlin_stdlib.appendNode('artifactId', 'kotlin-stdlib')
+                    kotlin_stdlib.appendNode('version', '1.5.31')
+                    kotlin_stdlib.appendNode('scope', 'compile')
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    archiveClassifier = 'sources'
+    from android.sourceSets.main.java.getSrcDirs()
+}
+
