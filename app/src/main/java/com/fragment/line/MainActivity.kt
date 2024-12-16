@@ -14,21 +14,21 @@ class MainActivity : FragmentActivity() {
         val transaction = supportFragmentManager.beginTransaction()
 
         val blankFragment = BlankFragment.newInstance()
-        val testFragment = TestFragment.newInstance()
+        val emptyFragment = EmptyFragment.newInstance()
 
         transaction.add(R.id.fragment_container, blankFragment)
         transaction.hide(blankFragment)
         transaction.setMaxLifecycle(blankFragment, Lifecycle.State.CREATED)
-        transaction.add(R.id.fragment_container, testFragment)
-        transaction.setMaxLifecycle(testFragment, Lifecycle.State.RESUMED)
+        transaction.add(R.id.fragment_container, emptyFragment)
+        transaction.setMaxLifecycle(emptyFragment, Lifecycle.State.RESUMED)
 
         transaction.commit()
 
         findViewById<Button>(R.id.btn1).setOnClickListener {
             supportFragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.enter_anim, R.anim.exit_anim)
-                .hide(testFragment)
-                .setMaxLifecycle(testFragment, Lifecycle.State.CREATED)
+                .hide(emptyFragment)
+                .setMaxLifecycle(emptyFragment, Lifecycle.State.CREATED)
 //                .add(R.id.fragment_container, blankFragment)
                 .show(blankFragment)
                 .setMaxLifecycle(blankFragment, Lifecycle.State.RESUMED)
@@ -37,16 +37,16 @@ class MainActivity : FragmentActivity() {
 
         findViewById<Button>(R.id.btn2).setOnClickListener {
             supportFragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.enter_anim, R.anim.exit_anim)
+                .setCustomAnimations(R.anim.enter_anim, R.anim.enter_anim)
                 .hide(blankFragment)
                 .setMaxLifecycle(blankFragment, Lifecycle.State.CREATED)
-                .show(testFragment)
-                .setMaxLifecycle(testFragment, Lifecycle.State.RESUMED)
+                .show(emptyFragment)
+                .setMaxLifecycle(emptyFragment, Lifecycle.State.RESUMED)
                 .commit()
         }
 
-        findViewById<Button>(R.id.btn3).setOnClickListener {
-            startActivity(Intent(this, SecondActivity::class.java))
+        findViewById<Button>(R.id.btn_jump).setOnClickListener {
+            startActivity(Intent(this, TestViewPagerActivity::class.java))
         }
     }
 }

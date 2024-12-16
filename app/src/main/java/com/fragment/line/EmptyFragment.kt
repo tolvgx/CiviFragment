@@ -8,14 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 
-class TestFragment : Fragment() {
-    private val hashCode = Integer.toHexString(this.hashCode())
+class EmptyFragment : Fragment() {
 
-    private val logTag = "LOG/TestFragment@$hashCode"
+    private val logTag = "LOG/EmptyFragment@${Integer.toHexString(this.hashCode())}"
 
     companion object {
         @JvmStatic
-        fun newInstance() = TestFragment()
+        fun newInstance() = EmptyFragment()
     }
 
     override fun onAttach(context: Context) {
@@ -34,7 +33,7 @@ class TestFragment : Fragment() {
     ): View? {
         Log.d(logTag, "onCreateView")
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_test, container, false)
+        return inflater.inflate(R.layout.fragment_empty, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

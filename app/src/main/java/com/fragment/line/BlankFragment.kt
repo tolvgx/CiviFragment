@@ -12,9 +12,7 @@ import androidx.fragment.app.Fragment
 
 class BlankFragment : Fragment() {
 
-    private val hashCode = Integer.toHexString(this.hashCode())
-
-    private val logTag = "LOG/BlankFragment@$hashCode"
+    private val logTag = "LOG/BlankFragment@${Integer.toHexString(this.hashCode())}"
 
     companion object {
         @JvmStatic
