@@ -89,9 +89,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  * to switch to the framework's implementation.  See the framework {@link FragmentManager}
  * documentation for a class overview.
  *
- * <p>Your activity must derive from {@link FragmentActivity} to use this. From such an activity,
- * you can acquire the {@link FragmentManager} by calling
- * {@link FragmentActivity#getSupportFragmentManager}.
+ * <ul>
+ *   <li>You can acquire the {@link FragmentManager} by calling {@link FragmentActivity#getSupportFragmentManager}.
+ *   <li>Also, you can acquire the {@link FragmentManager} by calling {@link FragmentManagerHost#getSupportFragmentManager}.
+ * </ul>
  */
 public abstract class FragmentManager implements FragmentResultOwner {
     static final String SAVED_STATE_TAG = "android:support:fragments";

@@ -112,9 +112,8 @@ import java.util.concurrent.atomic.AtomicReference;
  *
  * <p>The main differences when using this support version instead of the framework version are:
  * <ul>
- *  <li>Your activity must extend {@link FragmentActivity}
- *  <li>You must call {@link FragmentActivity#getSupportFragmentManager} to get the
- *  {@link FragmentManager}
+ *  <li>Your activity can extend {@link FragmentActivity}, in this way, You must call {@link FragmentActivity#getSupportFragmentManager} to get the {@link FragmentManager}
+ *  <li>Also, Your activity can extend common {@link Activity}, in this way, you must use proxy classes extend {@link FragmentManagerHost}, You must call {@link FragmentManagerHost#getSupportFragmentManager} to get the {@link FragmentManager}
  * </ul>
  *
  */
@@ -922,27 +921,27 @@ public class Fragment implements ComponentCallbacks, OnCreateContextMenuListener
     }
 
     /**
-     * Return the {@link FragmentActivity} this fragment is currently associated with.
+     * Return the {@link Activity} this fragment is currently associated with.
      * May return {@code null} if the fragment is associated with a {@link Context}
      * instead.
      *
      * @see #requireActivity()
      */
     @Nullable
-    final public FragmentActivity getActivity() {
-        return mHost == null ? null : (FragmentActivity) mHost.getActivity();
+    final public Activity getActivity() {
+        return mHost == null ? null : mHost.getActivity();
     }
 
     /**
-     * Return the {@link FragmentActivity} this fragment is currently associated with.
+     * Return the {@link Activity} this fragment is currently associated with.
      *
      * @throws IllegalStateException if not currently associated with an activity or if associated
      * only with a context.
      * @see #getActivity()
      */
     @NonNull
-    public final FragmentActivity requireActivity() {
-        FragmentActivity activity = getActivity();
+    public final Activity requireActivity() {
+        Activity activity = getActivity();
         if (activity == null) {
             throw new IllegalStateException("Fragment " + this + " not attached to an activity.");
         }
@@ -3448,8 +3447,10 @@ public class Fragment implements ComponentCallbacks, OnCreateContextMenuListener
             public ActivityResultRegistry apply(Void input) {
                 if (mHost instanceof ActivityResultRegistryOwner) {
                     return ((ActivityResultRegistryOwner) mHost).getActivityResultRegistry();
+                } else if (requireActivity() instanceof FragmentActivity) {
+                    return ((FragmentActivity) requireActivity()).getActivityResultRegistry();
                 }
-                return requireActivity().getActivityResultRegistry();
+                return null;
             }
         }, callback);
     }

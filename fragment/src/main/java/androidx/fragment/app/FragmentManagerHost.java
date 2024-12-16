@@ -22,8 +22,7 @@ import java.util.Collection;
  * Base class for Common Activity that want to use the support-based
  * {@link Fragment Fragments}.
  *
- * Tailored functions based on FragmentActivity. FragmentActivity includes all functions.
- * {@link FragmentActivity}
+ * Tailored functions based on {@link FragmentActivity}. FragmentActivity includes all functions.
  */
 public class FragmentManagerHost implements LifecycleOwner {
 
