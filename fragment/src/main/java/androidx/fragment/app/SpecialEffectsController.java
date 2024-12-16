@@ -122,9 +122,9 @@ abstract class SpecialEffectsController {
         }
         // Then search through running operations
         Operation runningOperation = findRunningOperation(fragmentStateManager.getFragment());
-        // Only use the running operation if the pending operation is null or NONE
+        // Only use the running operation if the pending operation is null
         if (runningOperation != null
-                && (lifecycleImpact == null || lifecycleImpact == Operation.LifecycleImpact.NONE)) {
+                && (lifecycleImpact == null)) {
             return runningOperation.getLifecycleImpact();
         }
         return lifecycleImpact;
@@ -166,7 +166,7 @@ abstract class SpecialEffectsController {
                     "SpecialEffectsController: Enqueuing show operation for fragment "
                             + fragmentStateManager.getFragment());
         }
-        enqueue(Operation.State.VISIBLE, Operation.LifecycleImpact.NONE, fragmentStateManager);
+        enqueue(Operation.State.VISIBLE, Operation.LifecycleImpact.SHOWING, fragmentStateManager);
     }
 
     void enqueueHide(@NonNull FragmentStateManager fragmentStateManager) {
@@ -175,7 +175,7 @@ abstract class SpecialEffectsController {
                     "SpecialEffectsController: Enqueuing hide operation for fragment "
                             + fragmentStateManager.getFragment());
         }
-        enqueue(Operation.State.GONE, Operation.LifecycleImpact.NONE, fragmentStateManager);
+        enqueue(Operation.State.GONE, Operation.LifecycleImpact.HIDING, fragmentStateManager);
     }
 
     void enqueueRemove(@NonNull FragmentStateManager fragmentStateManager) {
@@ -358,8 +358,10 @@ abstract class SpecialEffectsController {
             if (operation.getLifecycleImpact() == Operation.LifecycleImpact.ADDING) {
                 Fragment fragment = operation.getFragment();
                 View view = fragment.requireView();
-                Operation.State finalState = Operation.State.from(view.getVisibility());
-                operation.mergeWith(finalState, Operation.LifecycleImpact.NONE);
+                int visibility = view.getVisibility();
+                Operation.State finalState = Operation.State.from(visibility);
+                Operation.LifecycleImpact lifecycleImpact = visibility == View.VISIBLE ? Operation.LifecycleImpact.SHOWING : Operation.LifecycleImpact.HIDING;
+                operation.mergeWith(finalState, lifecycleImpact);
             }
         }
     }
@@ -501,7 +503,7 @@ abstract class SpecialEffectsController {
          */
         enum LifecycleImpact {
             /**
-             * No impact on the fragment's lifecycle.
+             * No impact on the fragment's lifecycle.(replace by SHOWING and HIDING)
              */
             NONE,
             /**
@@ -512,6 +514,14 @@ abstract class SpecialEffectsController {
              * This operation is associated with removing a fragment.
              */
             REMOVING,
+            /**
+             * This operation is associated with showing a fragment.
+             */
+            SHOWING,
+            /**
+             * This operation is associated with hiding a fragment.
+             */
+            HIDING
         }
 
         @NonNull
@@ -646,8 +656,8 @@ abstract class SpecialEffectsController {
                     mFinalState = State.REMOVED;
                     mLifecycleImpact = LifecycleImpact.REMOVING;
                     break;
-                case NONE:
-                    // This is a hide or show operation
+                case SHOWING:
+                    // If mFinalState is REMOVED, ignore any operation
                     if (mFinalState != State.REMOVED) {
                         if (FragmentManager.isLoggingEnabled(Log.VERBOSE)) {
                             Log.v(FragmentManager.TAG, "SpecialEffectsController: For fragment "
@@ -655,6 +665,25 @@ abstract class SpecialEffectsController {
                                     + finalState + ". ");
                         }
                         mFinalState = finalState;
+                        // If mLifecycleImpact is HIDING, override
+                        if (mLifecycleImpact == LifecycleImpact.HIDING) {
+                            mLifecycleImpact = lifecycleImpact;
+                        }
+                    }
+                    break;
+                case HIDING:
+                    // If mFinalState is REMOVED, ignore any operation
+                    if (mFinalState != State.REMOVED) {
+                        if (FragmentManager.isLoggingEnabled(Log.VERBOSE)) {
+                            Log.v(FragmentManager.TAG, "SpecialEffectsController: For fragment "
+                                    + mFragment + " mFinalState = " + mFinalState + " -> "
+                                    + finalState + ". ");
+                        }
+                        mFinalState = finalState;
+                        // If mLifecycleImpact is SHOWING, override
+                        if (mLifecycleImpact == LifecycleImpact.SHOWING) {
+                            mLifecycleImpact = lifecycleImpact;
+                        }
                     }
             }
         }
