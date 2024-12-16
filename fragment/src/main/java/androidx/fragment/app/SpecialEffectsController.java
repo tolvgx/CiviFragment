@@ -175,7 +175,7 @@ abstract class SpecialEffectsController {
                     "SpecialEffectsController: Enqueuing hide operation for fragment "
                             + fragmentStateManager.getFragment());
         }
-        enqueue(Operation.State.GONE, Operation.LifecycleImpact.HIDING, fragmentStateManager);
+        enqueue(Operation.State.INVISIBLE, Operation.LifecycleImpact.HIDING, fragmentStateManager);
     }
 
     void enqueueRemove(@NonNull FragmentStateManager fragmentStateManager) {

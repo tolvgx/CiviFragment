@@ -400,7 +400,7 @@ class FragmentStateManager {
             if (mFragment.mView != null) {
                 mFragment.mView.setSaveFromParentEnabled(false);
                 mFragment.mView.setTag(R.id.fragment_container_view_tag, mFragment);
-                if (mFragment.mHidden) mFragment.mView.setVisibility(View.GONE);
+                if (mFragment.mHidden) mFragment.mView.setVisibility(View.INVISIBLE);
                 mFragment.performViewCreated();
                 mDispatcher.dispatchOnFragmentViewCreated(
                         mFragment, mFragment.mView, mFragment.mSavedFragmentState, false);
@@ -538,7 +538,7 @@ class FragmentStateManager {
                 addViewToContainer();
             }
             if (mFragment.mHidden) {
-                mFragment.mView.setVisibility(View.GONE);
+                mFragment.mView.setVisibility(View.INVISIBLE);
             }
             // How I wish we could use doOnAttach
             if (ViewCompat.isAttachedToWindow(mFragment.mView)) {

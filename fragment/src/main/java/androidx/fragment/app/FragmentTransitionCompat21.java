@@ -159,7 +159,7 @@ class FragmentTransitionCompat21 extends FragmentTransitionImpl {
             @Override
             public void onTransitionEnd(Transition transition) {
                 Api19Impl.removeListener(transition, this);
-                fragmentView.setVisibility(View.GONE);
+                fragmentView.setVisibility(View.INVISIBLE);
                 final int numViews = exitingViews.size();
                 for (int i = 0; i < numViews; i++) {
                     exitingViews.get(i).setVisibility(View.VISIBLE);
