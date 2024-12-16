@@ -210,9 +210,9 @@ class FragmentStateManager {
         } else if (awaitingEffect == SpecialEffectsController.Operation.LifecycleImpact.REMOVING) {
             // Fragments that are in the process of being removed shouldn't go below that state
             maxState = Math.max(maxState, Fragment.AWAITING_EXIT_EFFECTS);
-        } else if (awaitingEffect == SpecialEffectsController.Operation.LifecycleImpact.SHOWING) {
+        } else if (awaitingEffect == SpecialEffectsController.Operation.LifecycleImpact.SHOWING && mFragment.mState <= Fragment.AWAITING_ENTER_EFFECTS) {
             maxState = Math.min(maxState, Fragment.AWAITING_ENTER_EFFECTS);
-        } else if (awaitingEffect == SpecialEffectsController.Operation.LifecycleImpact.HIDING) {
+        } else if (awaitingEffect == SpecialEffectsController.Operation.LifecycleImpact.HIDING && mFragment.mState >= Fragment.STARTED) {
             maxState = Math.max(maxState, Fragment.STARTED);
         } else if (mFragment.mRemoving) {
             if (mFragment.isInBackStack()) {
@@ -283,13 +283,21 @@ class FragmentStateManager {
                             start();
                             break;
                         case Fragment.AWAITING_ENTER_EFFECTS:
-                            if (mFragment.mView != null && mFragment.mContainer != null) {
-                                if (mFragment.mHiddenChanged && !mFragment.mHidden) {
-                                    SpecialEffectsController controller = SpecialEffectsController
-                                            .getOrCreateController(mFragment.mContainer,
-                                                    mFragment.getParentFragmentManager());
-                                    controller.enqueueShow(this);
+                            if (mFragment.mHiddenChanged) {
+                                if (mFragment.mView != null && mFragment.mContainer != null) {
+                                    if (!mFragment.mHidden) {
+                                        SpecialEffectsController controller = SpecialEffectsController
+                                                .getOrCreateController(mFragment.mContainer,
+                                                        mFragment.getParentFragmentManager());
+                                        controller.enqueueShow(this);
+                                    }
                                 }
+                                if (mFragment.mFragmentManager != null) {
+                                    mFragment.mFragmentManager.invalidateMenuForFragment(mFragment);
+                                }
+                                mFragment.mHiddenChanged = false;
+                                mFragment.onHiddenChanged(mFragment.mHidden);
+                                mFragment.mChildFragmentManager.dispatchOnHiddenChanged();
                             }
                             mFragment.mState = Fragment.AWAITING_ENTER_EFFECTS;
                             break;
@@ -305,14 +313,22 @@ class FragmentStateManager {
                             pause();
                             break;
                         case Fragment.STARTED:
-                            if (mFragment.mView != null && mFragment.mContainer != null) {
-                                if (mFragment.mHiddenChanged && mFragment.mHidden
-                                        && mFragment.mAdded && !mFragment.mRemoving) {
-                                    SpecialEffectsController controller = SpecialEffectsController
-                                            .getOrCreateController(mFragment.mContainer,
-                                                    mFragment.getParentFragmentManager());
-                                    controller.enqueueHide(this);
+                            if (mFragment.mHiddenChanged) {
+                                if (mFragment.mView != null && mFragment.mContainer != null) {
+                                    if (mFragment.mHidden
+                                            && mFragment.mAdded && !mFragment.mRemoving) {
+                                        SpecialEffectsController controller = SpecialEffectsController
+                                                .getOrCreateController(mFragment.mContainer,
+                                                        mFragment.getParentFragmentManager());
+                                        controller.enqueueHide(this);
+                                    }
                                 }
+                                if (mFragment.mFragmentManager != null) {
+                                    mFragment.mFragmentManager.invalidateMenuForFragment(mFragment);
+                                }
+                                mFragment.mHiddenChanged = false;
+                                mFragment.onHiddenChanged(mFragment.mHidden);
+                                mFragment.mChildFragmentManager.dispatchOnHiddenChanged();
                             }
                             mFragment.mState = Fragment.STARTED;
                             break;
@@ -378,6 +394,17 @@ class FragmentStateManager {
                 }
             }
             if (mFragment.mHiddenChanged) {
+                if (mFragment.mView != null && mFragment.mContainer != null) {
+                    // Get the controller and enqueue the show/hide
+                    SpecialEffectsController controller = SpecialEffectsController
+                            .getOrCreateController(mFragment.mContainer,
+                                    mFragment.getParentFragmentManager());
+                    if (mFragment.mHidden) {
+                        controller.enqueueHide(this);
+                    } else {
+                        controller.enqueueShow(this);
+                    }
+                }
                 if (mFragment.mFragmentManager != null) {
                     mFragment.mFragmentManager.invalidateMenuForFragment(mFragment);
                 }
