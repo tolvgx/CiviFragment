@@ -3403,4 +3403,8 @@ public abstract class FragmentManager implements FragmentResultOwner {
             return new ActivityResult(resultCode, intent);
         }
     }
+
+    public boolean isExecutingActions() {
+        return mExecutingActions;
+    }
 }
