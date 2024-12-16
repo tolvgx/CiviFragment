@@ -117,10 +117,9 @@ public class FragmentManagerHost implements LifecycleOwner {
      */
     public void onResume() {
         mFragments.noteStateNotSaved();
-        mResumed = true;
         mFragments.execPendingActions();
-
         onResumeFragments();
+        mResumed = true;
     }
 
     private void onResumeFragments() {
